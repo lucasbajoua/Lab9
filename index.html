@@ -1,72 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lab 9</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lab 9</title>
 
-  <style>
-    button {
-      margin: 3px;
-    }
+    <style>
+      button {
+        margin: 3px;
+      }
 
-    input[type="number"] {
-      width: 60px;
-    }
+      input[type="number"] {
+        width: 60px;
+      }
 
-    output {
-      border: 1px solid gray;
-      display: block;
-      height: 18px;
-      margin-top: 5px;
-      padding: 5px;
-      width: 240px;
-    }
-  </style>
-</head>
-<body>
-  <fieldset>
-    <legend>Error Calculator</legend>
-    <input type="number" name="first-num" id="first-num" />
-    <select name="operator" id="operator">
-      <option>+</option>
-      <option>-</option>
-      <option>*</option>
-      <option>/</option>
-    </select>
-    <input type="number" name="second-num" id="second-num" />
-    <button id="calculate">Calculate</button>
-    <br />
-    <output></output>
-  </fieldset>
+      output {
+        border: 1px solid gray;
+        display: block;
+        height: 18px;
+        margin-top: 5px;
+        padding: 5px;
+        width: 240px;
+      }
+    </style>
+  </head>
+  <body>
+    <fieldset>
+      <legend>Error Calculator</legend>
+      <input type="number" name="first-num" id="first-num" />
+      <select name="operator" id="operator">
+        <option>+</option>
+        <option>-</option>
+        <option>*</option>
+        <option>/</option>
+      </select>
+      <input type="number" name="second-num" id="second-num" />
+      <button id="calculate">Calculate</button>
+      <br />
+      <output></output>
+    </fieldset>
 
-  <section id="error-btns">
-    <button>Console Log Demo</button>
-    <button>Console Error Demo</button>
-    <button>Console Dir</button>
-    <button>Console dirxml</button>
-    <button>Console Group Start</button>
-    <button>Console Group End</button>
-    <button>Console Table</button>
-    <button>Start Timer</button>
-    <button>End Timer</button>
-    <button>Console Trace</button>
-    <button>Trigger a Global Error</button>
-  </section>
+    <section id="error-btns">
+      <button>Console Log Demo</button>
+      <button>Console Error Demo</button>
+      <button>Console Dir</button>
+      <button>Console dirxml</button>
+      <button>Console Group Start</button>
+      <button>Console Group End</button>
+      <button>Console Table</button>
+      <button>Start Timer</button>
+      <button>End Timer</button>
+      <button>Console Trace</button>
+      <button>Trigger a Global Error</button>
+    </section>
 
-  <script>
-    let calculateBtn = document.querySelector('#calculate');
-    calculateBtn.addEventListener('click', () => {
-      let output = document.querySelector('output');
-      let firstNum = document.querySelector('#first-num').value;
-      let secondNum = document.querySelector('#second-num').value;
-      let operator = document.querySelector('#operator').value;
-      output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
-    });
+    <script>
+      const label = "This is the calculator's data:";
+      let calculateBtn = document.querySelector("#calculate");
+      calculateBtn.addEventListener("click", () => {
+        let output = document.querySelector("output");
+        let firstNum = document.querySelector("#first-num").value;
+        let secondNum = document.querySelector("#second-num").value;
+        let operator = document.querySelector("#operator").value;
+        output.innerHTML = eval(`${firstNum} ${operator} ${secondNum}`);
+      });
 
-    let errorBtns = Array.from(document.querySelectorAll('#error-btns > button'));
-    // TODO - Make buttons functional
-  </script>
-</body>
+      let errorBtns = Array.from(
+        document.querySelectorAll("#error-btns > button")
+      );
+      // TODO - Make buttons functional
+      errorBtns[0].addEventListener("click", () => {
+        console.log(
+          document.querySelector("output").innerHTML + " is the answer"
+        );
+      });
+      errorBtns[1].addEventListener("click", () => {
+        if (
+          document.querySelector("#second-num").value == 0 &&
+          document.querySelector("#operator").value == "/"
+        ) {
+          console.error("Cannot divide by 0");
+        } else console.error("This is a console error demo.");
+      });
+      errorBtns[2].addEventListener("click", () => {
+        console.dir(document.querySelector("fieldset"));
+      });
+      errorBtns[3].addEventListener("click", () => {
+        console.dirxml(document.querySelector("fieldset"));
+      });
+      errorBtns[4].addEventListener("click", () => {
+        console.group(label);
+        console.dirxml(document.querySelector("fieldset"));
+      });
+      errorBtns[5].addEventListener("click", () => {
+        console.groupEnd(label);
+        console.log("group ended");
+      });
+      errorBtns[6].addEventListener("click", () => {
+        console.table([
+          {
+            firstNum: document.querySelector("#first-num").value,
+            secondNum: document.querySelector("#second-num").value,
+            operator: document.querySelector("#operator").value,
+            answer: document.querySelector("output").innerHTML,
+          },
+        ]);
+      });
+      errorBtns[7].addEventListener("click", () => {
+        console.time("myTimer");
+        console.log("timer started");
+      });
+      errorBtns[8].addEventListener("click", () => {
+        console.timeEnd("myTimer");
+      });
+      errorBtns[9].addEventListener("click", () => {
+        console.trace();
+      });
+      errorBtns[10].addEventListener("click", () => {
+        undefinedFunctionCall();
+      });
+
+      try {
+        undefinedVar;
+      } catch (err) {
+        console.error(err.name);
+        console.error(err.message);
+      }
+
+      /**
+       * Custom Error Class to determine if someone is old enough to drink
+       */
+      class FakeIdError extends Error {
+        constructor(message) {
+          super(message);
+          this.name = "FakeIdError";
+        }
+      }
+
+      let error = new FakeIdError("You're not old enough to drink");
+      let json = '{ "age": 19 }';
+      try {
+        let user = JSON.parse(json); // no errors here
+        if (user.age < 21) {
+          throw error;
+        }
+      } catch (err) {
+        console.error(err.name + ": " + err.message);
+      }
+
+      window.onerror = function () {
+        alert("global error caught (undefined function call)");
+      };
+    </script>
+  </body>
 </html>
